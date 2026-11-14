@@ -1,4 +1,5 @@
 
+
 SUDOROOT | Rooting Linux
 
 Your device is only yours. Even if it's Linux.
@@ -56,8 +57,9 @@ chmod +x ~/inject.sh
 4. Lock Anytime:
 	• Click Clear Password on the Dashboard to immediately wipe your cached password from RAM and block all incoming root requests.
 # Screen grab's
-screen14.jpg
-screen13.jpg
+<img width="1920" height="1080" alt="screen13" src="https://github.com/user-attachments/assets/0e39591b-ec0e-4300-941e-fee541189c8d" />
+<img width="1920" height="1080" alt="screen14" src="https://github.com/user-attachments/assets/0af543f1-f379-4e26-8196-499639dc2bfc" />
+
 
 # Credits
 L1f3less0 - Idea, tester
