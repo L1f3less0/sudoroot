@@ -55,6 +55,9 @@ chmod +x ~/inject.sh
 	• Use Launch Cloaked to run any app inside a bubblewrap sandbox where root binaries and sockets are masked at the kernel level.
 4. Lock Anytime:
 	• Click Clear Password on the Dashboard to immediately wipe your cached password from RAM and block all incoming root requests.
+# Screen grab's
+screen14.jpg
+screen13.jpg
 
 # Credits
 L1f3less0 - Idea, tester
