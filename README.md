@@ -1,66 +1,87 @@
 
-
 SUDOROOT | Rooting Linux
 
 Your device is only yours. Even if it's Linux.
-Welcome to SUDORoot—an interactive superuser authorization manager, SUDO_ASKPASS socket bridge, and ROOTHide sandboxing suite for Linux (tested on Arch / CachyOS on PS4 Linux).
+# Welcome to SUDORoot v1.2—a 
+Magisk-inspired superuser authorization manager, 100% RAM-based OverlayFS systemless injector, ROOTHide sandboxer, and Python .zip module engine for Linux (built and tested on Arch / CachyOS on PS4 Linux).
+
+# Features
+
+• Interactive Root Authorization (SUDO_ASKPASS): Intercepts sudo -A calls over a private Unix socket (0600) and prompts you to Agree, Deny, or Always Allow the exact command requesting root.
+• Zero Cached Sessions: Automatically runs sudo -k after every command so root privileges never stay silently cached in the background.
+• 100% Systemless RAM Overlay (OverlayFS): Stages binaries inside /dev/shm and merges them over /usr/local/bin purely in volatile memory—leaving zero files on your root filesystem when unmounted or rebooted.
+• Magisk-Style Python Modules (.zip): Install, toggle, and run custom .zip plugins built with the built-in SudoModuleAPI.
+• ROOTHide Cloaking: One-click terminal cloak to block sudo, su, and pkexec in open shells, plus a bubblewrap sandbox launcher that masks root binaries at the kernel level.
 
 # Requirements
 
-1. PC or PS3 / PS4 / PS5 running Linux (Arch / CachyOS recommended)
-2. Basic knowledge of the Linux terminal
-3. Dependencies:
+1. PC or PS3 / PS4 / PS5 running Linux (Arch / CachyOS, Debian / Ubuntu, or Fedora)
+2. Dependencies:
 	• python (3.10+) & tk
-	• customtkinter (installed via venv or system Python)
+	• customtkinter
 	• bubblewrap (bwrap)
-	• fish shell (for automatic sudo -k and terminal cloaking hooks)
+	• fish, bash, or zsh
 
-Included Files
+# Quick Start (EJECTF0RINJECT)
 
-Download or clone the repository containing these 3 core files:
-1. root.py — The main CustomTkinter manager GUI (Dashboard, Allowed Apps whitelist, ROOTHide sandboxer, Audit Log, and Test Commands).
-2. askpass_sudoroot.py — Lightweight Unix-socket bridge that intercepts sudo -A requests and passes the parent command to the manager.
-3. inject.sh — One-click installer script that deploys binaries, sets SUDO_ASKPASS, injects fish shell hooks, and configures auto-start.
-
-# Installation & Setup
-
-
-1. Install Dependencies
-
-On Arch / CachyOS:
+Clone the repository and run the universal injector:
 ```
-sudo pacman -S python tk bubblewrap fish
-python -m venv ~/ctk-venv
-~/ctk-venv/bin/pip install customtkinter
+git clone https://github.com/L1f3less0/sudoroot
+cd sudoroot
+chmod +x ejectf0rinject.sh
+./ejectf0rinject.sh
 ```
-(Optional: Open the folder in VS Code or Code - OSS with your ~/ctk-venv interpreter selected if you want to customize the UI.)
+Select from the interactive menu:
+1. Systemless Inject — Mounts SUDORoot into /usr/local/bin purely in RAM via OverlayFS (0 bytes written to system directories).
+2. Standard Inject — Installs binaries directly into /usr/local/bin.
+3. Eject / Uninstall Everything — Unmounts RAM overlays, removes all hooks, and restores stock sudo.
+4. Force Show GUI — Launches the SUDORoot manager window immediately.
 
-2. Inject Into Your System
+# Building Custom Modules (.zip)
 
-Place root.py, askpass_sudoroot.py, and inject.sh in your home directory (~/), then run:
+Create a .zip archive containing module.json and module.py, then install it from the Modules tab:
+
+1. module.json
+
 ```
-chmod +x ~/inject.sh
-~/inject.sh
+{
+  "id": "my_module",
+  "name": "System Inspector",
+  "version": "1.0",
+  "author": "L1f3less0",
+  "description": "Runs privileged checks using SudoModuleAPI."
+}
 ```
-# How to Use It
+2. module.py
+```
+def run(api):
+    api.log("Running custom module...")
+    code, out, err = api.run_root(["uname", "-r"])
+    if code == 0:
+        api.log(f"Kernel: {out}")
+    else:
+        api.log(f"Error: {err}")
+```
+Available SudoModuleAPI Methods
 
-1. Unlock Your Session:
-	• Open SUDORoot (launches automatically on boot or via /usr/local/bin/sudoroot).
-	• Click Unlock Session and enter your sudo password. Your password is held strictly in RAM and never written to disk.
-2. Approve or Deny Root Requests:
-	• Whenever any terminal command or script runs sudo, an authorization popup appears showing the exact command requesting root.
-	• Click Agree to authorize it once, tick Always allow to add it to your Allowed Apps whitelist, or click Deny to block it.
-	• After every command finishes, sudo -k runs automatically so credentials never stay cached in the background.
-3. Cloak Root Access (ROOTHide):
-	• Open the ROOTHide tab and click Enable Terminal Block to hide sudo, su, and pkexec in all open shells (command not found).
-	• Use Launch Cloaked to run any app inside a bubblewrap sandbox where root binaries and sockets are masked at the kernel level.
-4. Lock Anytime:
-	• Click Clear Password on the Dashboard to immediately wipe your cached password from RAM and block all incoming root requests.
-# Screen grab's
-<img width="1920" height="1080" alt="screen13" src="https://github.com/user-attachments/assets/0e39591b-ec0e-4300-941e-fee541189c8d" />
-<img width="1920" height="1080" alt="screen14" src="https://github.com/user-attachments/assets/0af543f1-f379-4e26-8196-499639dc2bfc" />
+• api.log("text") — Prints a timestamped message to the SUDORoot Audit Log.
 
 
-# Credits
-L1f3less0 - Idea, tester
-Google AI Mode - code
+• api.run_root(["cmd", "arg"]) — Runs a root command using the unlocked RAM session (returns code, stdout, stderr).
+
+
+• api.run_user(["cmd", "arg"]) — Runs a standard unprivileged command.
+
+
+• api.allow_command("sudo -A ...") — Adds a command rule to Allowed Apps.
+
+
+• api.set_cloak(True / False) — Toggles ROOTHide terminal blocking.
+
+
+• api.data_dir — Path to the module's persistent storage folder.
+
+Credits
+
+• L1f3less0 / r3gardless — Creator, architecture, PS4 Linux & Android testing
+• Google AI Mode — Code assistance
